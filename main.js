@@ -1,14 +1,28 @@
-var form = document.getElementById("my-form");
+function saveToLocalStorage(event) {
+  event.preventDefault();
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+  const name = event.target.username.value;
+  const email = event.target.emailId.value;
 
-  var user = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
+  const obj = {
+    name,
+    email,
   };
 
-  var users = JSON.parse(localStorage.getItem("users")) || [];
-  users.push(user);
-  localStorage.setItem("users", JSON.stringify(users));
-});
+  localStorage.setItem(obj.email, JSON.stringify(obj));
+}
+function showUserOnScreen(obj) {
+  const parentElem = document.getElementById("users");
+  const childElem = document.createElement("li");
+  childElem.textContent = obj.name + " - " + obj.email;
+
+  const deleteButton = document.createElement("input");
+  deleteButton.type = "button";
+  deleteButton.value = "Delete";
+  deleteButton.onclick = () => {
+    localStorage.removeItem(obj.email);
+    parentElem.removeChild(childElem);
+  };
+  childElem.appendChild(deleteButton);
+  parentElem.appendChild(childElem);
+}
